@@ -1,0 +1,1 @@
+`subscription-manager register --username zoli.sram@gmail.com --password suvpuw-xuksob-3byjvY`
