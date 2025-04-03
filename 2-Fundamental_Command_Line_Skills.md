@@ -1,6 +1,6 @@
 # Fundamental Command_Line Skills
 
-```bash
+```shell
 ### Accessing the documentation
 command -h
 command --help

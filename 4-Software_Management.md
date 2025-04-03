@@ -1,6 +1,6 @@
 # Software Management
 
-```Bash
+```shell
 ### rpm
 rpm -ivh package # install rpm package
 rpm -ivh package --nodeps # dangerous
