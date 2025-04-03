@@ -1,6 +1,6 @@
 # Managing Basic Networking
 
-```Shell
+```bash
 ### Network commands
 ping IP
 ping6 -I interface IP
