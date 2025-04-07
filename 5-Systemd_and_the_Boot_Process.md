@@ -47,6 +47,8 @@ set root=(lvm/rhel-root)
 linux (hd0,msdos1)/vmlinuz root=/dev/mapper/rhel-root #use tab to autocomplete
 initrd (hd0,msdos1)/initramfs.img #use tab to autocomplete
 
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
 keymap (hd0,gpt1)/boot/grub2/layouts/fr.gkb
 
 # systemd
@@ -85,10 +87,7 @@ systemctl start chronyd
 
 This lab is focused on targets and the boot process. You’ll boot a system into the emergency target, with a full display of all boot messages. You’ll then set up the system to boot into the multi-user target by default.
 
-1. Power up the server1.example.com system. During the boot process, when you see the following message (the operating system name and version number may vary), press a key:
-
-The selected entry will be started automatically in 5 seconds....
-
+1. Power up the server1.example.com system. During the boot process, when you see the following message (the operating system name and version number may vary), press a key: The selected entry will be started automatically in 5 seconds....
 2. Press e to edit the current menu entry.
 3. Scroll down to locate the line starting with linux.
 4. What do you need to change and add to that command line to boot into the emergency target?
@@ -99,7 +98,13 @@ The selected entry will be started automatically in 5 seconds....
 9. Restore the original default target.
 
 ```shell
+# 4 add: systemd.unit=emergency.target, delete: quiet
+systemctl get-default #5
+systemctl set-default multi-user.target
+systemctl isolate graphical.target #6
 
+cd /etc/systemd/system #7
+ln -s /usr/lib/systemd/system/multi-user.target default.target #7
 ```
 
 ## Lab2
@@ -107,7 +112,18 @@ The selected entry will be started automatically in 5 seconds....
 In this lab you’ll change the root administrative password. But here’s a twist: assume that you don’t know the current value of that password. What do you do?
 
 ```shell
-
+# When redhat start
+# /boot/grub2/grubenv : menu_auto_hide=1
+grub2-editenv - unset menu_auto_hide
+# At boot menu
+tape e
+# add at the end of linunx line
+rd.break
+mount -o remount,rw /sysroot
+chroot /sysroot
+passwd
+touch /.autorelabel
+exit exit
 ```
 
 ## Lab3
@@ -119,7 +135,11 @@ In this lab, you’ll set the timeout of GRUB 2 to 10 seconds. Before getting st
 As a bonus task, change the configuration of GRUB 2 to enable verbose boot messages at boot. To prove the result, reboot the system.
 
 ```shell
+vi /etc/default/grub
+# modify GRUB_TIMEOUT : 10
+# modify GRUB_CMDLINE_LINUX : delete quiet
 
+grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
 ## Lab4
@@ -128,7 +148,7 @@ Log in to the server1.example.com VM and take the following steps:
 
 1. Log in to the root account. Execute the following command:
 
-`v /boot/grub2/grub.cfg /root/`
+`mv /boot/grub2/grub.cfg /root/` 
 
 Note that this will make the system unbootable.
 
@@ -140,7 +160,18 @@ Remember that the top-level root directory is specified by the root directive wi
 6. If your efforts are not successful, boot the system from the installation DVD and select Troubleshooting, as described in the main body of the chapter.
 
 ```shell
+grub>
+insmod lvm
+ls
+search.file /grub2/grub.cfg
+cat (hd0,msdos1)/grub2/grub.cfg
+cat (lvm/rhel-root)/etc/fstab
 
+set root=(lvm/rhel-root)
+linux (hd0,msdos1)/vmlinuz root=/dev/mapper/rhel-root #use tab to autocomplete
+initrd (hd0,msdos1)/initramfs.img #use tab to autocomplete
+
+grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
 ## Lab5
@@ -152,7 +183,12 @@ Log in to the server1.example.com VM and take the following steps:
 3. Confirm that your changes are working.
 
 ```shell
-
+timedatectl set-timezone America/Chicago
+# /etc/chrony.conf
+pool time.google.com iburst
+systemctl restart chronyd
+timedatectl
+chronyc sources -v
 ```
 
 ## Lab6
@@ -163,7 +199,10 @@ Log in to the tester1.example.com VM and take the following steps:
 2. Reboot the system and save the journal log messages from the boot before the last one to the file /root/journal-beforelast.log.
 
 ```shell
-
+mkdir /var/log/journal
+journalctl --flush
+reboot
+journalctl -b 1 > /root/journal-beforelast.log
 ```
 
 ## Lab7
@@ -175,5 +214,9 @@ Log in to the tester1.example.com VM and complete the following tasks:
 3. Reboot the system and verify your changes.
 
 ```shell
-
+systemctl stop kdump
+systemctl disable kdump
+systemctl eanble rhcd
+reboot
+systemctl is-enabled kdump rhcd
 ```
