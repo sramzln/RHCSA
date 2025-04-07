@@ -1,169 +1,4 @@
-# RHCSA
-
-https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam?section=objectives
-
-## Understand and use essential tools
-
-- **Access a shell prompt and issue commands with correct syntax**
-- **Use input-output redirection (>, >>, |, 2>, etc.)**
-- Use grep and regular expressions to analyze text
-- Access remote systems using SSH
-- **Log in and switch users in multiuser targets**
-- Archive, compress, unpack, and uncompress files using tar, gzip, and bzip2
-- **Create and edit text files**
-- **Create, delete, copy, and move files and directories**
-- Create hard and soft links
-- **List, set, and change standard ugo/rwx permissions**
-- Locate, read, and use system documentation including man, info, and files in /usr/share/doc
-
-## Create simple shell scripts
-
-- Conditionally execute code (use of: if, test, [], etc.)
-- Use Looping constructs (for, etc.) to process file, command line input
-- Process script inputs ($1, $2, etc.)
-- Processing output of shell commands within a script
-
-## Operate running systems
-
-- Boot, reboot, and shut down a system normally
-- Boot systems into different targets manually
-- Interrupt the boot process in order to gain access to a system
-- Identify CPU/memory intensive processes and kill processes
-- Adjust process scheduling
-- **Manage tuning profiles**
-- Locate and interpret system log files and journals
-- Preserve system journals
-- Start, stop, and check the status of network services
-- Securely transfer files between systems
-
-## Configure local storage
-
-- **List, create, delete partitions on MBR and GPT disks**
-- **Create and remove physical volumes**
-- **Assign physical volumes to volume groups**
-- **Create and delete logical volumes**
-- **Configure systems to mount file systems at boot by universally unique ID (UUID) or label**
-- **Add new partitions and logical volumes, and swap to a system non-destructively**
-
-## Create and configure file systems
-
-- Create, mount, unmount, and use vfat, ext4, and xfs file systems
-- Mount and unmount network file systems using NFS
-- Configure autofs
-- **Extend existing logical volumes**
-- **Create and configure set-GID directories for collaboration**
-- **Diagnose and correct file permission problems**
-
-## Deploy, configure, and maintain systems
-
-- Schedule tasks using at and cron
-- Start and stop services and configure services to start automatically at boot
-- Configure systems to boot into a specific target automatically
-- Configure time service clients
-- Install and update software packages from Red Hat Network, a remote repository, or from the local file system
-- Modify the system bootloader
-
-## Manage basic networking
-
-- Configure IPv4 and IPv6 addresses
-- Configure hostname resolution
-- Configure network services to start automatically at boot
-- Restrict network access using firewall-cmd/firewall
-
-## Manage users and groups
-
-- **Create, delete, and modify local user accounts**
-- **Change passwords and adjust password aging for local user accounts**
-- **Create, delete, and modify local groups and group memberships**
-- **Configure superuser access**
-
-## Manage security
-
-- Configure firewall settings using firewall-cmd/firewalld
-- Manage default file permissions
-- Configure key-based authentication for SSH
-- Set enforcing and permissive modes for SELinux
-- List and identify SELinux file and process context
-- Restore default file contexts
-- Manage SELinux port labels
-- Use boolean settings to modify system SELinux settings
-- Diagnose and address routine SELinux policy violations
-
-## Manage containers
-
-- Find and retrieve container images from a remote registry
-- Inspect container images
-- Perform container management using commands such as podman and skopeo
-- Perform basic container management such as running, starting, stopping, and listing running containers
-- Run a service inside a container
-- Configure a container to start automatically as a systemd service
-- Attach persistent storage to a container
-
 ```Shell
-### Basic Commands
-touch
-cp
-ls -l long
-   -r reverse
-   -t time-sorted
-mv
-mkdir /rmdir
-mkdir folder1/folder2/folder3
-
-### Use input ouput redirection
-ls -l > file
-ls -l >> file2 # append
-ls -l 2> err # error redirection
-ls -l >> err+out 2>&1 # input and output redirection to same file
-ls -l &> err+out # input and output in the same file
-ls -l > 2> /dev/null
-
-cat << EOF > reirect-file
-..
-EOF
-
-tee -a output << EOF
-..
-EOF
-
-command < file
-cat < jerry
-
-ls -l /etc | wc -l # pipes
-
-### Find command
-find / -name fstab -exec cp -a {} /home/zoltan/Documents/ \;
-find / -size +20M
-find / -atime +12 # 12 Hours
-find /home/zoltan -empty
-find / -iname toto # iname is not case senitive like -name
-
-### Vim
-ESC
-   i -> insert
-   r -> replace
-   d -> delete
-   x -> delete 1 char.
-   u -> undo
- :q! -> quit
-:wq! -> quit and save # shift + zz
-   o -> new line
-
-### Standard permissions
-r - read
-w - write
-x - execute
-
-u - user
-g - group
-o - others
-a - all
-
-chmod g-w jerry
-chmod a-r jerry
-
-chown -R
-chgrp -R
 
 ### Add group / add secondary group
 # /etc/passwd
@@ -196,24 +31,7 @@ getfacl  /var/fstab
 setfacl -m u:natasha:rw /var/fstab # change access only for one user
 setfacl -m g:mac:--- /var/fstab # change access for one group
 
-#### Special attributes 
-chattr # Change attribute
-chattr -a # append only
-chattr -i # immutable
-chattr -d # disallow backups with dump command
-lsattr # List attribute
 
-### umask /etc/profile or /etc/bashrc
-umask
-# for a directory 777-mask give the permissions
-# for a file 666-mask give the permissions
-
-#### PATH variable
-echo $PATH
-export PATH="/path/new/folder:$PATH" # Add new folder to PATH. For interactive shell add this line in .bashrc, for login shell add to .bash profile
-# For all users a /etc/profile.d/custom_path.sh
-echo 'PATH="/path/new/folder:$PATH"' | tee -a /etc/profile.d/custom_path.sh
-sudo chom +x /etc/profile.d/custom_path.sh
 
 ### Configuring repositories and install packages
 # Repositories
@@ -348,4 +166,162 @@ stratis pool list
 stratis pool add-data pool1 /dev/sdd
 
 stratis filsystem create pool1 fs1
+stratis filesystem set-quota mypool/fs1 10G
+stratis filesystem list
+stratis filesystem list-quota
+
+# vi /etc/fstab
+UUID  /fs1  xfs   defaults,x-systemd.requires=stratisd.service 0 0
+
+### VDO (Virtual Data Optimiser)
+# Inline data reduction, deduplication, compression, thin provisionning
+
+dnf install vdo kmod-kvdo
+
+vdo create --name VD01 --device=/dev/sde --vdoLogicalSize=50G
+vdo list
+mkfs.xfs /dev/..
+
+### cron
+#minutes hours day_of_month month day_of_week command
+[https://crontab.guru/]
+systemctl status crond
+crontab -e
+crontab -l
+crontab -r
+
+run-parts /etc/cron.hourly
+
+# 0 10 4 2 * /usr/local/bin/backup
+crontab -e -u baljit 
+# 08 12 * * 4 /bash/echo hello
+
+### grep
+grep -i "root" /etc/group
+
+
+
+###SELinux
+getenforce
+setenforce
+
+semanage fcontext -a -t httpd_sy_content_t "/NEW(/.*)?"
+retorecon -Rv /web
+# Modify /etc/httpd/conf/httpd.conf
+# DocumentRoot and Directory
+
+
+getsebool -a
+setsebool -P httpd_enable_cgi on # -P persistent after reboot
+setsebool -P httpd_enable_homedirs on
+semanage port -a -t http_port-t -p tcp 82
+
+### Containers, podman
+# Pull a container image
+dnf install podman container-tools
+podman login registry.redhat.io
+podman search httpd
+podman pull docker.io/manasip/httpd
+podman pull docker.io/library/httpd
+podman rmi # remove image
+
+mkdir /web
+touch /web/index.html
+
+# Run a container
+podman run -d --name web1 docker.io/library/httpd
+podman run -d --name web2 -p 8080:80 docker.io/library/httpd
+podman run -ti --name web3 -p 8081:80 docker.io/library/httpd /bin/bash
+
+# Map the container to a local directory
+podman run -d --name web6 -p 8082:80 -v /web:/usr/local/apache2/htdocs:z  docker.io/library/httpd
+curl localhost:8082
+
+# Run the container as a service
+# root user
+podman generate systemd web > /etc/systemd/system/web.service
+systemctl daemon-reload
+systemctl enable web --now
+
+# regular user
+useradd test
+passwd test
+ssh test@localhost
+podman login registry.redhat.io
+podman pull docker.io/library/httpd
+
+podman run -d --name new -p 8082:80 -v docker.io/library/httpd
+mkdir -p ~/.config/systemd/user
+podman generate systemd new > ~/.config/systemd/user/new.service
+
+systemctl --user daemon-reload
+systemctl --user denable web --now
+
+### Keymap
+localctl status
+localctl list-locales
+localctl list-keymaps
+localctl set-keymap map
+localctl set-X11-keymap map
+
+
+
+### Shell scripting
+#!/bin/bash
+
+# Local variables
+
+# Env. variables
+env
+$HOME
+$SHELL
+
+# Example 1
+echo "Enter your name"
+read name
+touch $name
+echo "File created"
+
+# Posotional parameters
+$0 name of script
+$1 #first argument
+$# #total number of arguments
+$* #value of all arguments
+
+# Example 2
+read -p "Enter a number: " number
+
+if [[ $number > 10 ]]; then
+  echo "The number is grather then 10"; else
+  echo "The number is not grather then 10"
+fi
+
+-eq # equal
+-ne # not equal
+-gt # greather then
+-ge # greather or equal
+-lt # less then
+-le # less ou equal
+!exp # experssion is false
+
+# Example 3
+#!/bin/bash
+read -p "Enter a number: " number
+
+if [[ $number -ge 10 ]]; then
+  echo "The number is grather then 10"; else
+  echo "The number is not grather then 10"
+fi
+
+read -p "Enter a number: " number
+
+if (( $number >= 10 )); then
+  echo "The number is grather then 10"; else
+  echo "The number is not grather then 10"
+fi
+
+= # if string is equal
+!= # if trings are not equal
+-n # true if string is not null
+-z # true if string is null
 ```
