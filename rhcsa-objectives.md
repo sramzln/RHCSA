@@ -1,50 +1,7 @@
-```Shell
-
-### Add group / add secondary group
-# /etc/passwd
-# /etc/group
-groupadd newgroup
-useradd -G newgroup harsh
-
-useradd nitin -s /sbin/nologin
-useradd -g superheroes 
-        -s /bin/bash
-        -c "user description"
-        -m -> create home directory
-        -d /home/spiderman -> home folder
-        spiderman
-chgrp -R superheros spiderman
-
-
-
-### SUID / GUID / sticky bit
--rwsr-xr-x. 1 root root 32648 Aug 10  2021 /usr/bin/passwd # SUID . Files are executed by the effectif user ID of the proccess. (only files)
--rwx--s--x. 1 root slocate 41032 Aug 10  2021 /usr/bin/locate # GUID Files are executed by the effectif group ID of the proccess. Files created in this directory are the same ownership as the directory. (files and folders)
-drwxrwxrwt. 17 root root 4096 Mar 31 09:09 /tmp # Sticky bit. Files in this directory can be renamed or removed only by th owner (only folders)
-
-chown -R :mac /linux # Chown group mac all existing files
-chmod g+s /linux
-chmod +t /linux # only the user-owner can delete the file
-
 ### ACL
 getfacl  /var/fstab 
 setfacl -m u:natasha:rw /var/fstab # change access only for one user
 setfacl -m g:mac:--- /var/fstab # change access for one group
-
-
-
-### Configuring repositories and install packages
-# Repositories
-# https://xyz.server.com/baseos
-# https://xyz.server.com/appstream
-# /etc/yum.repos.d/local.repo
-name=baseOS
-baseurl=https://xyz.server.com/baseos
-gpgcheck=0
-enabled=1
-
-dnf install tuned httpd stratis-cli stratisd
-dnf update kernel
 
 ### Tuned, NTP, systemctl
 # tuned
@@ -94,59 +51,7 @@ swapon -a
 free -mh
 
 ### LVM2
-lsblk
-lsblk -f # fs type
-lsblk -o name,size,fstype
 
-# Create PV
-pvcreate /dev/sdb
-pvdisplay
-
-# Create PV 2
-fdisk /dev/sdc
-pvcreate /dev/sdc1 /dev/sdc2
-pvscan
-pvremove
-
-# Create VG
-vgcreate lvm1 /dev/sdb /dev/sdc1
-vgdisplay
-vgscan
-
-# Extend / Reduce VG by a physical volume
-vgextend lvm1 /dev/sdc2
-vgreduce lvm1 /dev/sdc2
-vgremove lvm1
-
-# Logical Volumes
-lvextend -r -L +2G /dev/VG1/lv1 # -r extend automatically the file system too
-vgextend VG1 /dev/sde
-lvextend -r -L +6G /dev/VG1/lv1
-
-lvchange -an /dev/VG1/LV1
-vgremove /dev/VG1
-
-vgcreate -s 8M VG2 /dev/sdc # Extend size 8MB
-lvcreate -l 10 -n LV2 VG2 # Specify the number of extends
-lvcreate -l 100%FREE -n LV2 VG2 # Extend to 100% free space
-
-lvcreate -L size -n name vgname
-lvreate -L +8G -n lv1 lvm1
-
-lvcreate -l 60%VG -n lv2 lvm2
-lvcreate -l 100%FREE -n lv2 lvm2
-
-lvscan
-
-mkfs.ext4 /dev/lvm1/lv1
-mount -t ext4 /dev/lvm1/lv1 /mnt
-
-lvresize -L +2GB /dev/lvm1/lv1
-resize2fs /dev/lvm1/lv1
-
-lvreduce -r -L -1G dev/lvm1/lv1 # with resizefs
-
-xfs_grofs /dev/lvm2/lv1
 
 ### Stratis
 # Use XFS only
