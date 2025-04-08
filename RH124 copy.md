@@ -26,7 +26,6 @@ ln -s
 #
  Hard link
 ln
-```
 
 Pipes
 command1 [argument] | command2 [argument]
@@ -265,7 +264,7 @@ rpm -qf /usr/bin/bash
 
 ### Create local repo from DVD
 
-https://access.redhat.com/solutions/1355683
+[ttps://access.redhat.com/solutions/1355683]
 
 ## Acces linux file system
 
