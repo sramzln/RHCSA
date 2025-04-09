@@ -114,6 +114,26 @@ Add a new virtual drive of at least 2GiB in size to the server1.example.com VM. 
 You’ll also create a second new partition of size 2GiB using fdisk, format it, and configure it as additional swap space in /etc/fstab so that space is also used the next time you boot Linux. Additionally, use UUIDs in /etc/fstab.
 
 ```shell
+# 1st partition
+lsblk
+mkfs.xfs /dev/sdb1
+lsblk -f
+mkdir /test1
+vi /etc/fstab 
+systemctl daemon-reload 
+mount -a
+#2nd partition
+fdisk /dev/sdb
+mkswap /dev/sdb2
+vi /etc/fstab 
+systemctl daemon-reload 
+mount -a
+swapon /dev/sdb2
+free -m
+# Verification
+reboot
+df -h
+cat /proc/swaps
 ```
 
 ## Labs2
@@ -125,6 +145,22 @@ Create a new VG of 1000MiB using a new partition that you created on the /dev/sd
 Set up the LV on the /test2 directory in the /etc/fstab file, formatted to the XFS filesystem. Use the UUID for the associated logical volume device in /etc/fstab.
 
 ```shell
+lsblk
+pvcreate /dev/sdc1
+lsblk
+pvs
+vgcreate VG /dev/sdc1
+vgs
+lvcreate -L 900M VG -n LV1
+lvs
+mkfs.xfs /dev/mapper/VG-LV1 
+lsblk -f
+vi /etc/fstab 
+systemctl daemon-reload 
+mkdir /test2
+mount -a
+lsblk
+reboot
 ```
 
 ## Labs3
@@ -134,6 +170,8 @@ In this lab, you’ll continue the work done in Lab 2, expanding the space avail
 Just one hint: it’s far too easy to skip steps during the process.
 
 ```shell
+lvextend -L +50M /dev/VG/LV1
+xfs_growfs /dev/VG/LV1
 ```
 
 ## Labs4
@@ -143,6 +181,15 @@ Before starting this lab, remove any existing volumes created on the /dev/sdb dr
 Configure a new LV named lv01 whose size should be 800 logical extents. (How many MB do the LEs correspond to?) Format the LV to the ext4 filesystem and set it up on the /test4 directory in the /etc/fstab file. Use the LV device name in /etc/fstab.
 
 ```shell
+pvcreate /dev/sdb /dev/sdd
+vgcreate -s 2M VG2 /dev/sdb /dev/sdd
+vgdisplay # to check
+lvcreate -l 800 -n lv01 VG2
+mkfs.ext4 /dev/VG2/lv01
+blkid
+vi /etc/fstab
+systemctl daemon-reload
+mount -a
 ```
 
 ## Labs5
@@ -163,4 +210,13 @@ In this lab, you’ll configure the automounter to automatically mount an NFS fi
 7. Now you can configure the local automounter to mount the shared NFS directory, using the techniques described in the chapter.
 
 ```shell
+dnf install nfs-utils autofs -y
+
+showmount -e 192.168.10.119
+
+vi /etc/auto.master # don't need to modify
+vi /etc/auto.misc
+    /data /etc/auto.misc # /data will be created automatically. It will be accesible /misc/data
+vi /etc/auto.misc
+    data            -rw,soft,intr           192.168.10.119:/shared
 ```
