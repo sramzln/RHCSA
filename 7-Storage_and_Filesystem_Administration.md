@@ -89,8 +89,78 @@ mount -t nfs server1.example.com:/pub /share
 #/etc/fstab, /etc/nfs.conf
 server1:/pub /share nfs rsize=65536,wsize=65536,hard 0 0
 
-dnf install nfs-utils -y
 
 ## Automounter
+# Server /etc/exports
+/shared 192.168.10.120(ro,sync)
+exportfs -arv
 
+# On client
+dnf install nfs-utils autofs -y
+
+showmount -e 192.168.10.119
+
+vi /etc/auto.master # don't need to modify
+vi /etc/auto.misc
+    /data /etc/auto.misc # /data will be created automatically. It will be accesible /misc/data
+vi /etc/auto.misc
+    data            -rw,soft,intr           192.168.10.119:/shared
+```
+
+## Labs1
+
+Add a new virtual drive of at least 2GiB in size to the server1.example.com VM. In this lab, you’ll create one new partition of size 1GiB using parted, format it to the XFS filesystem, and configure it on the /test1 directory in /etc/fstab so that the new partition is properly mounted the next time you boot Linux. 
+
+You’ll also create a second new partition of size 2GiB using fdisk, format it, and configure it as additional swap space in /etc/fstab so that space is also used the next time you boot Linux. Additionally, use UUIDs in /etc/fstab.
+
+```shell
+```
+
+## Labs2
+
+In this lab, you’ll set up a formatted logical volume. If you use the partitions created in Lab 1, don’t forget to delete or at least comment out any associated settings in the /etc/fstab file.
+
+Create a new VG of 1000MiB using a new partition that you created on the /dev/sdb drive. Configure an LV of size 900MiB. Mount the resulting LV on the /test2 directory, and confirm the result with the mount and df commands. Name the VG volgroup1 and name the LV logvol1.
+
+Set up the LV on the /test2 directory in the /etc/fstab file, formatted to the XFS filesystem. Use the UUID for the associated logical volume device in /etc/fstab.
+
+```shell
+```
+
+## Labs3
+
+In this lab, you’ll continue the work done in Lab 2, expanding the space available to the formatted LV closer to the capacity of the VG. For example, if you were able to follow the size guidelines in Lab 2, use appropriate commands to increase the space available to the LV from 900MiB to 950MiB. Don’t delete any of the contents of the filesystem during the resize operation.
+
+Just one hint: it’s far too easy to skip steps during the process.
+
+```shell
+```
+
+## Labs4
+
+Before starting this lab, remove any existing volumes created on the /dev/sdb drive. Add a new virtual drive to the virtual machine. Then, set up two PVs on the two drives, such as /dev/sdb and /dev/sdc, using the entire size of the drives. Set up a new VG named vg01 using the PVs that you have just created, with a PE size of 2MB.
+
+Configure a new LV named lv01 whose size should be 800 logical extents. (How many MB do the LEs correspond to?) Format the LV to the ext4 filesystem and set it up on the /test4 directory in the /etc/fstab file. Use the LV device name in /etc/fstab.
+
+```shell
+```
+
+## Labs5
+
+In this lab, you’ll configure the automounter to automatically mount an NFS filesystem. While the configuration of an NFS server is not covered in the RHCSA exam, you need an NFS server to practice with NFS mounts. So, the steps included in this lab are designed to help you set up a simple shared NFS directory on one system, with connections allowed from a second system. If you’ve set up the systems described in Chapter 1, the first system would be server1.example.com and the second system would be tester1.example.com.
+
+1. On the first system, back up your current /etc/auto.master and /etc/auto.net configuration files.
+2. Install NFS server configuration files with the following command:
+`# dnf install nfs-utils`
+3. Share the /tmp directory by adding the following line to /etc/exports (be careful not to include extra spaces):
+/tmp *(ro)
+4. Activate the NFS service, and set a rule on the zone-based firewall with the following commands. (Firewalls are described in Chapter 8.)
+`# systemctl restart nfs-server`
+`# firewall-cmd --permanent --add-service=nfs --add-service=rpc-bind --add-service=mountd`
+`# firewall-cmd --reload`
+5. Record the IP address of the local system, as shown by the ip addr show command. If it’s the server1.example.com system described in Chapter 1, it should be 172.16.0.100; but another IP address is okay too.
+6. Go to another RHEL 9 system, such as the tester1.example.com system described in Chapter 1. Install the nfs-utils RPM package.
+7. Now you can configure the local automounter to mount the shared NFS directory, using the techniques described in the chapter.
+
+```shell
 ```
