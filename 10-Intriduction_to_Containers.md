@@ -1,4 +1,0 @@
-# Introdiction to Containers
-
-```shell
-```
