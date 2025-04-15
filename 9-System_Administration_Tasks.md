@@ -108,20 +108,11 @@ ch=Hello
 echo ${ch:-World} 
 echo ${ch2:-World}
 
-# replace longest match pattern with string
-${parameter/pattern/string}
-
-# remove shortest occurence of word staer at the begining
-${parameter#word}
-
-# remove lonest occurence of word start at the begining
-${parameter##word}
-
-# remove shortest occurence of word staer at the end
-${parameter%word}
-
-# remove lonest occurence of word start at the end
-${parameter%%word}
+${parameter/pattern/string} # replace longest match pattern with string
+${parameter#word} # remove shortest occurence of word staer at the begining
+${parameter##word} # remove lonest occurence of word start at the begining
+${parameter%word} # remove shortest occurence of word staer at the end
+${parameter%%word} # remove lonest occurence of word start at the end
 
 ## Test operators
 sting1 = string2
@@ -209,7 +200,10 @@ In this lab, you’ll set up a cron job to back up the /etc directory every Satu
 
 ```shell
 vi /etc/cron.d/backup
-/usr/bin/tar --selinux -czvf /tmp/etc-backup-$(/bin/date +"%m%d%I%M").tar.gz /etc/
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+01 * * * * root /usr/bin/tar --selinux -czf /tmp/etc-backup-$(/bin/date +"\%m\%d\%I\%M").tar.gz /etc/
 ```
 
 ## Labs5
