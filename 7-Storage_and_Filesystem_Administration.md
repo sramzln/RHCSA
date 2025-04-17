@@ -1,7 +1,7 @@
 # 7-Storage and Filesystem Administration
 
 ```shell
-/etc/fstab, /etc/mtab
+# files /etc/fstab, /etc/mtab
 blkid # universally unique identifiers
 df -h # available filesystem with mount points. Power of 1024
 df -H # power of 1000
@@ -84,7 +84,7 @@ lvreduce -r -L -1G dev/lvm1/lv1 # with resizefs
 
 xfs_grofs /dev/lvm2/lv1
 
-## NFS
+# NFS
 mount -t nfs server1.example.com:/pub /share
 #/etc/fstab, /etc/nfs.conf
 server1:/pub /share nfs rsize=65536,wsize=65536,hard 0 0
@@ -107,7 +107,7 @@ vi /etc/auto.misc
     data            -rw,soft,intr           192.168.10.119:/shared
 ```
 
-## Labs1
+## Labs 1
 
 Add a new virtual drive of at least 2GiB in size to the server1.example.com VM. In this lab, you’ll create one new partition of size 1GiB using parted, format it to the XFS filesystem, and configure it on the /test1 directory in /etc/fstab so that the new partition is properly mounted the next time you boot Linux. 
 
@@ -136,7 +136,7 @@ df -h
 cat /proc/swaps
 ```
 
-## Labs2
+## Labs 2
 
 In this lab, you’ll set up a formatted logical volume. If you use the partitions created in Lab 1, don’t forget to delete or at least comment out any associated settings in the /etc/fstab file.
 
@@ -163,7 +163,7 @@ lsblk
 reboot
 ```
 
-## Labs3
+## Labs 3
 
 In this lab, you’ll continue the work done in Lab 2, expanding the space available to the formatted LV closer to the capacity of the VG. For example, if you were able to follow the size guidelines in Lab 2, use appropriate commands to increase the space available to the LV from 900MiB to 950MiB. Don’t delete any of the contents of the filesystem during the resize operation.
 
@@ -174,7 +174,7 @@ lvextend -L +50M /dev/VG/LV1
 xfs_growfs /dev/VG/LV1
 ```
 
-## Labs4
+## Labs 4
 
 Before starting this lab, remove any existing volumes created on the /dev/sdb drive. Add a new virtual drive to the virtual machine. Then, set up two PVs on the two drives, such as /dev/sdb and /dev/sdc, using the entire size of the drives. Set up a new VG named vg01 using the PVs that you have just created, with a PE size of 2MB.
 
@@ -192,7 +192,7 @@ systemctl daemon-reload
 mount -a
 ```
 
-## Labs5
+## Labs 5
 
 In this lab, you’ll configure the automounter to automatically mount an NFS filesystem. While the configuration of an NFS server is not covered in the RHCSA exam, you need an NFS server to practice with NFS mounts. So, the steps included in this lab are designed to help you set up a simple shared NFS directory on one system, with connections allowed from a second system. If you’ve set up the systems described in Chapter 1, the first system would be server1.example.com and the second system would be tester1.example.com.
 
@@ -202,9 +202,13 @@ In this lab, you’ll configure the automounter to automatically mount an NFS fi
 3. Share the /tmp directory by adding the following line to /etc/exports (be careful not to include extra spaces):
 /tmp *(ro)
 4. Activate the NFS service, and set a rule on the zone-based firewall with the following commands. (Firewalls are described in Chapter 8.)
+
 `# systemctl restart nfs-server`
+
 `# firewall-cmd --permanent --add-service=nfs --add-service=rpc-bind --add-service=mountd`
+
 `# firewall-cmd --reload`
+
 5. Record the IP address of the local system, as shown by the ip addr show command. If it’s the server1.example.com system described in Chapter 1, it should be 172.16.0.100; but another IP address is okay too.
 6. Go to another RHEL 9 system, such as the tester1.example.com system described in Chapter 1. Install the nfs-utils RPM package.
 7. Now you can configure the local automounter to mount the shared NFS directory, using the techniques described in the chapter.
