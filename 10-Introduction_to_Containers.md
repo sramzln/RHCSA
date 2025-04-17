@@ -1,12 +1,21 @@
 # Introduction to Containers
 
 ```shell
+# Installation
 dnf install container-tools
 
-podman info
-podman search python
+# Basic commands
+podman version # version of podman engine
+podman info # informations, configuration files etc.
+podman search python # search images
 podman images # list installed images
+podman rmi # remove images
+podman attach # more suitable for interactive use cases
+podman exec # more suitable for executing commands or scripts
+podman cp # podman cp /myapp/app.conf containerID:/myapp/app.conf, podman cp containerID:/myapp/ /myapp/
+podman generate systemd
 
+# skopeo - get informations from image
 skopeo login 
 skopeo docker://registry.redhat.io/rhel8/python-39
 
@@ -15,24 +24,18 @@ podman run -d --name webserver -p 8080:8080 registry.access.redhat.com/ubi9/http
 podman create 
 podman start
 podman stop
-podman ps -a
+podman ps -a # list all containers
 
 # Build a container
 vi Containerfile
-###########
-FROM registry.access.redhat.com/ubi9/python-39
 
+FROM registry.access.redhat.com/ubi9/python-39
 LABEL maintainer="RHCSA training"
 LABEL description="Simple Web server for RHCSA drills"
-
 COPY index.html /app/index.html
-
 EXPOSE 8000
-
 WORKDIR /app
-
 CMD ["python","-m","http.server"]
-##########
 
 touch index.html
 echo "Hello World!" > index.html 
@@ -43,12 +46,13 @@ podman run -d --name simple-webserver -p 8000:8000 python-webserver
 # Push local image to quai.io
 podman login -u='sramzln' -p='mHlUheJm6+DM3ttBDfbarWh33XwtCJQu04/zKMaIvnVnwjL8a5HdESE7Ipg69LfOZrWoCL4Mj+c+vkebUbP4+A==' quay.io
 podman images
-# Tag th image on format quai.io
+
+# Tag the image on format quai.io
 podman tag localhost/python-webserver:latest quay.io/sramzln/simple-webserver:latest
 podman tag my-image:latest my-image:v1.0
 podman push quay.io/sramzln/simple-webserver:latest
 
-# Run in the background
+# Run container in the background
 podman run -d --name simple-webserver -p 8000:8000 python-webserver
 
 # Interact with the container
@@ -56,15 +60,6 @@ podman run -ti simple-webserver:latest /bin/bash
 
 podman inspect my-app
 podman logs my-app
-
-podman rmi # remove images
-
-podman attach
-podman cp
-podman exec
-podman generate
-podman info
-podman version
 
 ## Run container as a systemd service
 ~/.config/systemd/user # for a standard user
@@ -78,7 +73,7 @@ systemctl --user enable container-webserver.service
 loginctl enable-linger
 ```
 
-## Lab1
+## Lab 1
 
 Explore the BusyBox image with Podman. Known for its minimal size, BusyBox includes compact versions of numerous Linux utilities into a single, tiny image, serving as an alternative for a majority of utilities often found in GNU fileutils, shellutils, and so on.
 Proceed to pull the image and create a container named busybox by utilizing the image you just fetched. What is the size of the image? Try running the container in detached mode. What is the outcome?
@@ -95,7 +90,7 @@ podman run -it --name busybox busybox:latest /bin/sh
 podman run --cap-add=NET_RAW busybox ping -c 5 www.google.com
 ```
 
-## Lab2
+## Lab 2
 
 Set up a simplistic “ping-pong” service running within a container using Python. Start by generating a Containerfile that builds an image based on the Red Hat UBI 9 Python 3.9 image. This image should install the Flask Python module by using the pip install Flask command.
 
@@ -133,7 +128,7 @@ podman run -d --name ping-pong -p 1234:8000 localhost/ping-pong:latest
 curl http://127.0.0.1:1234/ping
 ```
 
-## Lab3
+## Lab 3
 
 Building on what you did in Lab 2, set up the container to run without root privileges using systemd. Name the systemd unit container-pingpong. Make sure to configure the container service to automatically start when the system boots.
 As an extra challenge, try doing the same thing, but this time run the service in a container with root privileges.
@@ -148,7 +143,7 @@ loginctl enable-linger
 reboot
 ```
 
-## Lab4
+## Lab 4
 
 In this lab, you will get hands-on experience with running an Apache web service in a container using the UBI 9 httpd-24 image. The exercise focuses on understanding the differences between ephemeral and persistent storage in the context of containerized applications.
 
