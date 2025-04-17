@@ -1,7 +1,7 @@
 # Software Management
 
 ```shell
-### rpm
+# rpm
 rpm -ivh package # install rpm package
 rpm -ivh package --nodeps # dangerous
 rpm -U package # upgrade, upgrade package if exist, install if not exist
@@ -35,7 +35,7 @@ rpm -qpi tmux-3.2a-5.el9.x86_64.rpm
 rpm -ivh tmux-3.2a-5.el9.x86_64.rpm
 rpm -ql tmux
 
-### dnf
+# dnf
 subscription-manager register
 subscription-manager list --available
 subscription-manager attach --pool=id
@@ -51,7 +51,7 @@ dnf config-manager --dump
 dnf config-manager --add-repo=https://test.com
 
 vi /etc/yum.repos.d/test.repo
-name=basos
+name=baseos
 baseurl=file:///
 baseurl=https://
 baseurl=ftp://
@@ -161,7 +161,7 @@ Once dependencies are resolved, examine where the downloads come from. Note how 
 dnf update -y > update.txt
 ```
 
-## Lab5
+## Lab 5
 
 Find information about group “Graphical Administration Tools.” How many packages does it include? Are they all optional?
 Then, install the wireshark package.
@@ -171,7 +171,7 @@ dnf group info “Graphical Administration Tools”
 dnf install -y wireshark
 ```
 
-## Lab6
+## Lab 6
 
 Install the module stream postgresql 15, using the client profile.
 
