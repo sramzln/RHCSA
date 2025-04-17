@@ -98,9 +98,19 @@ man 5 sudoers
 
 SGID # Force all new files/folders created inside a directory to inherit the directory's group ownership (not the creating user’s default group).
 useradd test3; echo changeme | passwd --stdin test3
+
+# ACL
+setfacl -m u:user:rw /path/to/file # for user
+setfacl -m g:group:rw /path/to/file # for group
+getfacl /path/to/file # retrieve permissions
+
+setfacl -Rm u:user:rw /path/to/folder
+
+setfacl -x u:user /path/to/file # Remove ACLs for a specific user
+setfacl -b /path/to/file # Remove all ACL's
 ```
 
-## Lab1
+## Lab 1
 
 Create a new user named newguy. Make sure that user is a member of the users group as a supplementary group. Create a second user named intern. Create a special group named peons, and make both new users members of that group. Assign a GID of 12345 to that group.
 
@@ -113,7 +123,7 @@ usermod -aG peons newguy
 usermod -aG peons intern
 ```
 
-## Lab2
+## Lab 2
 
 Create a new user named senioradm. Set up that user with sudo privileges to run any command as any user, but senioradm should still be required to enter his regular account password before he is allowed to run a command via sudo.
 
@@ -122,7 +132,7 @@ useradd senioradm; echo changeme | passwd --stdin senioradm
 usermod -aG wheel senioradm # or /etc/sudoers senioradm ALL=(ALL) ALL
 ```
 
-## Lab3
+## Lab 3
 
 Create a new user named junioradm. Set up that user with privileges to run the fdisk command as root, with the help of sudo. In this case, user junioradm should not be required to enter her regular account password before she’s allowed to run the fdisk command.
 
@@ -130,7 +140,7 @@ Create a new user named junioradm. Set up that user with privileges to run the f
 junioradm   ALL=(root) NOPASSWD: /usr/sbin/fdisk
 ```
 
-## Lab4
+## Lab 4
 
 Make sure all new users get a copy of the bash subdirectory of the /usr/share/doc directory, including all files therein. Test the result by creating a new user named infouser with the useradd command.
 
@@ -138,7 +148,7 @@ Make sure all new users get a copy of the bash subdirectory of the /usr/share/do
 cp -a /usr/share/doc/bash /etc/skel # -a preserve everything
 ```
 
-## Lab5
+## Lab 5
 
 Create a new user named mike. Force the user to change his password after the first login. Ensure that user mike changes his password at most every 30 days, and at the minimum after 7 days from the last password change. New users created on the system must change their password every 30 days.
 
@@ -148,7 +158,7 @@ vi /etc/login.defs
 PASS_MAX_DAYS 30
 ```
 
-## Lab6
+## Lab 6
 
 In this lab you will explore the differences between locking a user’s password, disabling a user account, and setting a user account’s shell to /sbin/nologin.
 Create a user account named testlock and lock the user’s password.
@@ -173,7 +183,7 @@ usermod -e "" testlock # enable account
 usermod -s /sbin/nologin # change shell for user
 ```
 
-## Lab7
+## Lab 7
 
 Create a private directory for a group of engineers designing some galleys. Create a group named galley for the engineers, and name their user accounts mike, rick, terri, and maryam. Enable them to share files for collaboration in the /home/galley directory.
 
