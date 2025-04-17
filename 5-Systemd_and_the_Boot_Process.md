@@ -1,7 +1,7 @@
 # Systemd and the Boot Process
 
 ```shell
-### Emergency boot
+# Emergency boot
 # At boot tape e and add at the end of vmlinuz line
 systemd.unit=rescue.target # mount fs in rw mode
 systemd.unit=emergency.target # mount only root fs in ro mode
@@ -10,7 +10,7 @@ systemd.unit=multi-user.target
 systemctl reboot / poweroff / halt
 openssl rand -base64 16 | tr -d '/+='
 
-### Reset root password
+# Reset root password
 # When redhat start
 # /boot/grub2/grubenv : menu_auto_hide=1
 grub2-editenv - unset menu_auto_hide
@@ -83,7 +83,7 @@ chronyc sources -v # to see ntp servers
 systemctl start chronyd
 ```
 
-## Lab1
+## Lab 1
 
 This lab is focused on targets and the boot process. You’ll boot a system into the emergency target, with a full display of all boot messages. You’ll then set up the system to boot into the multi-user target by default.
 
@@ -107,7 +107,7 @@ cd /etc/systemd/system #7
 ln -s /usr/lib/systemd/system/multi-user.target default.target #7
 ```
 
-## Lab2
+## Lab 2
 
 In this lab you’ll change the root administrative password. But here’s a twist: assume that you don’t know the current value of that password. What do you do?
 
@@ -126,7 +126,7 @@ touch /.autorelabel
 exit exit
 ```
 
-## Lab3
+## Lab 3
 
 In this lab, you’ll set the timeout of GRUB 2 to 10 seconds. Before getting started, it’s best to back up the file. For example, the following command backs up the file to the root user’s home directory (/root):
 
@@ -142,13 +142,12 @@ vi /etc/default/grub
 grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-## Lab4
+## Lab 4
 
 Log in to the server1.example.com VM and take the following steps:
 
 1. Log in to the root account. Execute the following command:
-
-`mv /boot/grub2/grub.cfg /root/` 
+`mv /boot/grub2/grub.cfg /root/`
 
 Note that this will make the system unbootable.
 
@@ -158,6 +157,7 @@ Remember that the top-level root directory is specified by the root directive wi
 4. After entering the location of the initial RAM disk, run the boot command at the grub> prompt.
 5. If your efforts are successful, the system will boot normally. In the “Lab Answers” section, you’ll see how to restore the backed-up GRUB 2 configuration file.
 6. If your efforts are not successful, boot the system from the installation DVD and select Troubleshooting, as described in the main body of the chapter.
+
 
 ```shell
 grub>
@@ -174,7 +174,7 @@ initrd (hd0,msdos1)/initramfs.img #use tab to autocomplete
 grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
-## Lab5
+## Lab 5
 
 Log in to the server1.example.com VM and take the following steps:
 
@@ -191,7 +191,7 @@ timedatectl
 chronyc sources -v
 ```
 
-## Lab6
+## Lab 6
 
 Log in to the tester1.example.com VM and take the following steps:
 
@@ -205,7 +205,7 @@ reboot
 journalctl -b 1 > /root/journal-beforelast.log
 ```
 
-## Lab7
+## Lab 7
 
 Log in to the tester1.example.com VM and complete the following tasks:
 
