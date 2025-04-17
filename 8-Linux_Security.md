@@ -1,7 +1,7 @@
 # Linux Security
 
 ```shell
-## Firewall
+# Firewall
 # /etc/services, list of ports with services
 systemctl status firewalld
 systemctl is-active firewalld
@@ -33,7 +33,7 @@ ssh-copy-id -i ~/.ssh/id_key.pub zoltan@192.168.10.119
 private key - 600
 piblic key - 644
 
-## SELinux
+# SELinux
 ls -Z
 # /etc/selinux/config
 # enforcing,permissive,disabled
@@ -91,7 +91,7 @@ getsebool -a # list all boolean values
 setsebool -P # set boolean values
 ```
 
-## Lab1
+## Lab 1
 
 In this lab, you’ll review the process for disabling and re-enabling SELinux on a system. Review the current status of SELinux with the sestatus command. You can disable SELinux through the /etc/sysconfig/selinux file or through the SELinux
 Administration tool.
@@ -102,7 +102,7 @@ Do so and reboot the system. Try the sestatus command again. Re-enable SELinux a
 vi /etc/selinux/conig # pass enabled to disabled and run grubby command
 ```
 
-## Lab2
+## Lab 2
 
 In this lab, you’ll set up an Apache web server that you will use for the subsequent lab exercises. Although the configuration of a web server is not part of the RHCSA exam objectives, you may be required to troubleshoot issues related with firewall configuration or SELinux.
 
@@ -127,7 +127,7 @@ firewall-cmd --list-services #5
 
 ```
 
-## Lab3
+## Lab 3
 
 This lab follows from the web server that you have configured in Lab 2. You will run the web server on a different port.
 
@@ -148,7 +148,7 @@ systemctl restart httpd.service
 reboot
 ```
 
-## Lab4
+## Lab 4
 
 This lab is almost identical to Lab 3, but with an additional caveat.
 
@@ -168,7 +168,7 @@ systemctl restart httpd.service
 reboot
 ```
 
-## Lab5
+## Lab 5
 
 In this lab, you will continue the configuration of the web server by setting a nondefault location to serve web pages.
 
@@ -201,7 +201,7 @@ semanage fcontext -a -t httpd_sys_content_t '/html(/.*)?'
 retorecon -Rv /html
 ```
 
-## Lab6
+## Lab 6
 
 Your task is to perform the following operations on tester1.example.com and server1.example.com:
 
