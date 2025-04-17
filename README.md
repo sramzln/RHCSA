@@ -9,4 +9,4 @@
 - [7 - Storage and Filesystem Administration](https://github.com/sramzln/rhcsa/blob/main/7-Storage_and_Filesystem_Administration.md)
 - [8 - Linux Security](https://github.com/sramzln/rhcsa/blob/main/8-Linux_Security.md)
 - [9 - System Administration Tasks](https://github.com/sramzln/rhcsa/blob/main/9-System_Administration_Tasks.md)
-- [10 - Introdiction to Containers](https://github.com/sramzln/rhcsa/blob/main/10-Intriduction_to_Containers.md)
+- [10 - Introduction to Containers](https://github.com/sramzln/rhcsa/blob/main/10-Intriduction_to_Containers.md)
