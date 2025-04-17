@@ -1,4 +1,4 @@
-# 7-Storage and Filesystem Administration
+# Storage and Filesystem Administration
 
 ```shell
 # files /etc/fstab, /etc/mtab

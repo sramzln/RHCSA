@@ -1,4 +1,4 @@
-# Fundamental Command_Line Skills
+# Fundamental Command Line Skills
 
 ```shell
 # Accessing the documentation

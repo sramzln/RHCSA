@@ -1,6 +1,6 @@
 # RHCSA
 
-[https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam?section=objectives]
+<https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam?section=objectives>
 
 ## Understand and use essential tools
 
