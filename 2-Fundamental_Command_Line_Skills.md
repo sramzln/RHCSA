@@ -1,7 +1,7 @@
 # Fundamental Command_Line Skills
 
 ```shell
-### Accessing the documentation
+# Accessing the documentation
 command -h
 command --help
 man command
@@ -11,7 +11,7 @@ info command # /usr/share/info
 pinfo command
 # /usr/share/doc
 
-### Basic Commands
+# Basic Commands
 touch
 cp
 ls -l long
@@ -25,8 +25,9 @@ sort
 sed
 diff
 awk
+ln
 
-### Use input ouput redirection
+# Use input ouput redirection
 ls -l > file
 ls -l >> file2 # append
 ls -l 2> err # error redirection
@@ -47,14 +48,14 @@ cat < jerry
 
 ls -l /etc | wc -l # pipes
 
-### Find command
+# Find command
 find / -name fstab -exec cp -a {} /home/zoltan/Documents/ \;
 find / -size +20M
 find / -atime +12 # 12 Hours
 find /home/zoltan -empty
 find / -iname toto # iname is not case senitive like -name
 
-### Vim
+# Vi
 ESC
    i -> insert
    r -> replace
@@ -72,7 +73,7 @@ export PATH="/path/new/folder:$PATH" # Add new folder to PATH. For interactive s
 echo 'PATH="/path/new/folder:$PATH"' | tee -a /etc/profile.d/custom_path.sh
 sudo chom +x /etc/profile.d/custom_path.sh
 
-### Permissions and Ownership
+# Permissions and Ownership
 r - read
 w - write
 x - execute
@@ -88,14 +89,14 @@ chmod a-r jerry
 chown -R
 chgrp -R
 
-### Special attributes 
+# Special attributes 
 chattr # Change attribute
 chattr -a # append only
 chattr -i # immutable
 chattr -d # disallow backups with dump command
 lsattr # List attribute
 
-### umask /etc/profile or /etc/bashrc
+# umask /etc/profile or /etc/bashrc
 umask
 # for a directory 777-mask give the permissions
 # for a file 666-mask give the permissions
