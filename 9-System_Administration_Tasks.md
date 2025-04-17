@@ -8,6 +8,18 @@ ps axl # PID,PPID
 ps -efZ # with SELinux context
 
 top
+du
+df -h 
+uptime
+free # memory usage
+lsof # liste opened files
+tcpdump # network traffic
+ss
+ps -ef # every process
+ps -ejH # every process tree
+vmstat # memory statistics
+iostat
+iftop # network communication
 
 sar # dnf install sysstat
 
@@ -23,6 +35,14 @@ killall httpd
 top + k
 kill -l
 man 7 signal
+
+# systemctl
+systemctl
+systemctl --version
+systemctl --all
+systemctl status/start/stop/restart/enable/disable application.service
+systemctl mask/unmask -> disable service completly
+systemctl list-unit-files
 
 ### tuned
 dnf install tuned
@@ -152,7 +172,7 @@ journalctl --since 04:00 --until 10:59
 journalctl _UID=1000
 ```
 
-## Labs1
+## Labs 1
 
 Install the tuned RPM package and ensure that is started and enabled at boot.
 Find the current active tuned profile and switch the system to the balanced profile.
@@ -168,7 +188,7 @@ tuned-adm list profiles
 tuned-adm profile balanced
 ```
 
-## Labs2
+## Labs 2
 
 As the root user, create cron jobs that change the login message for users at the text console. To do so, you’ll want to change the content of /etc/motd. Make sure that people who log in at different times get appropriate messages:
 If users log in between 7 a.m. and 1 p.m., create the login message “Coffee time!”
@@ -182,7 +202,7 @@ crontab -e
 0 18 * * * /usr/bin/echo "Shouldn't you be doing something else?" > /etc/motd
 ```
 
-## Labs3
+## Labs 3
 
 In this lab, you’ll set up an at job as the root administrative user, to save a list of currently installed RPMs in the /root/rpms.txt file. That job will be run once, 24 hours from now. If you want to verify your work, set up a second at job with the same commands to start five minutes from now.
 
@@ -194,7 +214,7 @@ at> <EOT>
 job 9 at Sat Apr 12 15:53:00 2025
 ```
 
-## Labs4
+## Labs 4
 
 In this lab, you’ll set up a cron job to back up the /etc directory every Saturday at 2:05 a.m. You should ensure that SELinux contexts are preserved. You are not allowed to edit the root crontab. The backup should be saved in a gzipped-tar archive format in the /tmp directory, using the filename etc-backup-MMDD.tar.gz, where MMDD is the current date in numeric format. Extract one of the generated backup files, to confirm that SELinux contexts are preserved.
 
@@ -206,7 +226,7 @@ MAILTO=root
 01 * * * * root /usr/bin/tar --selinux -czf /tmp/etc-backup-$(/bin/date +"\%m\%d\%I\%M").tar.gz /etc/
 ```
 
-## Labs5
+## Labs 5
 
 In this lab, you'll create a script that can be used to backup any given directory to a specified destination directory. The script should:
 
