@@ -1,31 +1,21 @@
 # Managing Basic Networking
 
 ```shell
-### Network commands
+# Network commands
 ping IP
 ping6 -I interface IP
+ip
+ifup or ifdown
+netstat
+traceroute
+tcpdump
+nslookup or dig
+ethtool
 
-traceroute # UDP by default
-traceroute -n # Display IP address rather than hostname
-traceroute -I # ICMP
-traceroute -T # TCP
-
-### Networking, hostname
-ip addr show
-ip addr show ens18
-
-ip addr add 172.16.22.10/16 dev eth0
-ip link set up eth0
-ip link set down eth0
-
-ip route # default routes and ip addresses
-ip neigh # ARP
-
+# Network files and basic command
 # nmcli
-nmcli device status # systemctl status NetworkManager
 nmcli device show
-nmcli connection show 
-nmcli connection show ens19 # to see all parameters
+nmcli connection
 
 # Configure static IP
 nmcli device
@@ -38,7 +28,6 @@ nmcli connection up ens18
 nmcli connection down ens18
 nmcli connection reload ens18
 nmcli con mod ens192 ipv4.addresses "" ipv4.gateway ""
-nmcli con mod "Default1" connection.autoconnect yes
 
 # Configure secondary IP
 nmcli device status
@@ -46,11 +35,31 @@ nmcli connection show --active
 nmcli connection modify ens18 +ipv4.addresses 192.168.10.122/24
 nmcli connection reload
 
-nmcli con add con-name Net type ethernet ifname eth0 ip4 192.168.10.15/24 gw 192.168.10.1
-nmcli con mod Net ipv4.dns 8.8.8.8
+systemctl reboot
 
-# nmtui
-nmtui
+# IP command
+ip addr show
+ip route show
+ip route
+ip r
+ip -c route | column -t
+
+ip r add default via 192.168.10.254 dev ens18
+ip route add 192.168.10.122/24 via 192.168.10.254 dev ens19
+
+watch "ip -s link show ens19 # statistics"
+
+## Files
+# /etc/sysconfig/network-scripts
+# /etc/hosts
+# /etc/hostname
+# /etc/resolv.conf
+# /etc/nsswitch.conf
+
+traceroute # UDP by default
+traceroute -n # Display IP address rather than hostname
+traceroute -I # ICMP
+traceroute -T # TCP
 
 ### DNS resolution
 # /etc/hostname
@@ -66,6 +75,20 @@ authselect # modify nsswitch.conf
 
 ### SSH Connection
 dnf install openssh-server
+
+# File: /etc/ssh/sshd.config
+# Timeout
+    ClientAliveInternal 600
+    ClientAliveCountMAx 0
+# Disable root login
+    PermitRootLogin
+# Empty password
+    PermitEmptyPasswords no
+# Limit users
+    AllowUsers user1 user2
+# Use a different port
+Port 2222
+
 ssh-keygen -t ed25519 - C "Zoltan key"
 ssh-copy-id -i homelab_ed15519.pub zoltan@192.168.10.120
 ssh-add ~/.ssh/homelab_ed15519
@@ -80,9 +103,7 @@ scp -r folder zoltan@server1:/home/zoltan/ # copy to server
 scp zoltan@server1:/home/zoltan/file /home/zoltan # copy from server
 ```
 
-## LAB
-
-Lab 1
+## Lab 1
 
 To prepare the server1.example.com system for this lab, download the file ch03lab01.sh from the companion website, copy the file to server1 using scp, and run the script as root:
     # chmod +x ch03lab01.sh
@@ -99,7 +120,7 @@ nmcli con down ens18
 nmcli con up ens18
 ```
 
-Lab 2
+## Lab 2
 
 Repeat the same steps as in Lab 1, but this time use the ch03lab02.sh file.
 
@@ -112,7 +133,7 @@ systemctl restart NetwokManager
 nmcli con show --active
 ```
 
-Lab 3
+## Lab 3
 
 Repeat the same steps as in Lab 1, but this time use the ch03lab03.sh file.
 
@@ -123,7 +144,7 @@ ncmli con down ens18
 nmcli con up ens18
 ```
 
-Lab 4
+## Lab 4
 
 In this lab, you’ll set up an /etc/hosts file for the different systems on the local network. The instructions in this lab are based on the server1 and tester1 systems described in Chapter 1.
 
@@ -136,7 +157,7 @@ In this lab, you’ll set up an /etc/hosts file for the different systems on the
 192.168.10.120 node2
 ```
 
-Lab 5
+## Lab 5
 
 In this lab, you’ll use the nmtui tool. But before you do so, remember to back up appropriate configuration files. As this is a console tool, you’ll have to use the TAB and ENTER or SPACEBAR keys to make selections.
 
@@ -159,7 +180,7 @@ In this lab, you’ll use the nmtui tool. But before you do so, remember to back
 nmtui
 ```
 
-Lab 6
+## Lab 6
 
 Repeat the process described in Lab 5 with the Network Connection Editor tool. To open it, run nm-connection-editor from a GNOME terminal.
 
