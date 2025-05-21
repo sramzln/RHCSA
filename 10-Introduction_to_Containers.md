@@ -17,7 +17,7 @@ podman generate systemd
 
 # skopeo - get informations from image
 skopeo login 
-skopeo docker://registry.redhat.io/rhel8/python-39
+skopeo inspect docker://registry.redhat.io/rhel8/python-39
 
 # Run first container
 podman run -d --name webserver -p 8080:8080 registry.access.redhat.com/ubi9/httpd-24

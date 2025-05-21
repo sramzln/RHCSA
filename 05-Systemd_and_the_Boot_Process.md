@@ -28,6 +28,9 @@ ls -l /etc/systemd/system/default.target
 systemctl get-default
 
 ### Modify system bootloader
+grubby --update-kernel=ALL --remove-args="rhgb quiet"
+grubby --update-kernel=ALL --args="rhgb quiet"
+
 grub2-mkconfig
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
@@ -43,11 +46,11 @@ search.file /grub2/grub.cfg
 cat (hd0,msdos1)/grub2/grub.cfg
 cat (lvm/rhel-root)/etc/fstab
 
-set root=(lvm/rhel-root)
-linux (hd0,msdos1)/vmlinuz root=/dev/mapper/rhel-root #use tab to autocomplete
-initrd (hd0,msdos1)/initramfs.img #use tab to autocomplete
+    set root=(lvm/rhel-root)
+    linux (hd0,msdos1)/vmlinuz root=/dev/mapper/rhel-root #use tab to autocomplete
+    initrd (hd0,msdos1)/initramfs.img #use tab to autocomplete
 
-grub2-mkconfig -o /boot/grub2/grub.cfg
+    grub2-mkconfig -o /boot/grub2/grub.cfg
 
 keymap (hd0,gpt1)/boot/grub2/layouts/fr.gkb
 

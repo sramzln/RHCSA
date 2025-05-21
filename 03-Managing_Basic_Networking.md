@@ -17,6 +17,9 @@ ethtool
 nmcli device show
 nmcli connection
 
+# Add new device
+nmcli connection add type ethernet ifname eth0 con-name my-eth
+
 # Configure static IP
 nmcli device
 nmcli connection modify ens18 ipv4.addresses 192.168.10.121/24

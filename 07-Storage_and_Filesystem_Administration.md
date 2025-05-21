@@ -63,7 +63,7 @@ lvchange -an /dev/VG1/LV1
 vgremove /dev/VG1
 
 vgcreate -s 8M VG2 /dev/sdc # Extend size 8MB
-lvcreate -l 10 -n LV2 VG2 # Specify the number of extends
+lvcreate -l 10 -n LV2 VG2 # Specify the number of logical extends
 lvcreate -l 100%FREE -n LV2 VG2 # Extend to 100% free space
 
 lvcreate -L size -n name vgname
